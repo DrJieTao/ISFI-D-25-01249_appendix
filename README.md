@@ -9,6 +9,6 @@
 | **Appendix A.2** | `prompts/review_prompt.txt` | Tier 1 **Review Agent** Prompt (include all ART specifications). |
 | **Appendix A.3** | `prompts/review_prompt_t2.txt` | Tier 2 Evolved Review Agent Prompts (Comprehensive Verifier). |
 | **Appendix B** | `ai_panel_eval/` | system and persona based prompts for the **AI Committee**, in Markdown format. |
-| **Appendix C** | `config/escalation.py` | Thresholds for escalation triggers. |
-| **Appendix D** | `config/memory_bus_schema.md` | Database schema for the relational SQLite database, as the implemenation of the **Shared Memory Bus**. |
+| **Appendix C** | `configs/escalation.py` | Thresholds for escalation triggers. |
+| **Appendix D** | `configs/memory_bus_schema.md` | Database schema for the relational SQLite database, as the implemenation of the **Shared Memory Bus**. |
  
