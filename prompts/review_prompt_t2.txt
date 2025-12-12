@@ -41,8 +41,10 @@
             1. RECALL: Missed 'ambience', 'atmosphere', or 'decor' cues.
             2. RECALL: Missed 'price', 'value', or 'cost' cues.
             3. PRECISION: False Positive 'service'. 
-               - FAIL if: "We were less than impressed", "Not coming back", "Terrible experience" (general dissatisfaction) is tagged as Service.
-               - PASS if: "The waiter was slow", "Staff was rude" (explicit service).
+               - FAIL if: 
+                 a) "We were less than impressed", "Not coming back" (General negative sentiment).
+                 b) "Small portions", "Huge serving" (Refers to Food quantity, not Staff).
+               - PASS if: "The waiter was slow", "Staff was rude" (Explicit staff interaction).
             
             INPUT: review_text, extracted_aspects
             OUTPUT: 
