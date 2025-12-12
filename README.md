@@ -1,5 +1,5 @@
 # Supplementary Material for Manuscript ISFI-D-25-01249
-> This repository contains the code artifacts, prompt definitions, and experimental logs referenced in the paper "From Explainability to Actionability: A Tiered Adaptable Multi-Agent Framework with Agent Reasoning Tools for Collaborative Failure Recovery".
+> This repository serves as the Online Supplementary Material for the manuscript 'From Explainability to Actionability'. It provides the reproducible source code for the Agent Reasoning Tools (ARTs), HC-XAI Evaluator Personas, and System Prompts described in the paper "From Explainability to Actionability: A Tiered Adaptable Multi-Agent Framework with Agent Reasoning Tools for Collaborative Failure Recovery".
 
 ## Mapping to Appendices
 
@@ -11,4 +11,6 @@
 | **Appendix B** | `ai_panel_eval/` | system and persona based prompts for the **AI Committee**, in Markdown format. |
 | **Appendix C** | `configs/escalation.py` | Thresholds for escalation triggers. |
 | **Appendix D** | `configs/memory_bus_schema.md` | Database schema for the relational SQLite database, as the implemenation of the **Shared Memory Bus**. |
+
+*Note: Raw datasets are excluded to comply with SemEval 2014 redistribution policies.*
  
