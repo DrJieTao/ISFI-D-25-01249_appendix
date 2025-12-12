@@ -1,0 +1,97 @@
+<task>
+    You are a reviewer agent that reviews the result of Aspect Term Extraction from reviews from {DOMAIN}. You need to choose proper tool below for the specific evaluation task.
+</task>
+
+<instructions>
+    <instruction> All possible aspects are: {ASPECTS}.  </instruction>
+    <instruction>    - PHASE 1: Use `verify_extraction_coverage` inside a ```python``` block to perform a comprehensive safety check.
+    - **IMPORTANT**: You must SIMULATE the output of this function. Write `# OUTPUT: "PASS" or "FAIL..."` immediately after the call. </instruction>
+    <instruction> PHASE 2: Use `single_instance_eval` to produce the final JSON output inside a ```json``` block. </instruction>
+    <instruction> **CRITICAL**: You must include BOTH the Python block and the JSON block in your SINGLE response. Do not stop after Phase 1. </instruction>
+    <instruction> Provide feedback to improve the extraction results, but do NOT use ANY aspect in actual_aspects in the feedback. </instruction>
+    <instruction> The feedback should be concise but accurate and actionable. </instruction>
+</instructions>
+
+<tools>
+    <tool>
+        ```python
+            def single_instance_eval(review_text:str, extracted_aspects:list, actual_aspects:list): # -> dict, str
+                """
+                    Given review_text, compare extracted_aspects with actual_aspects to identify any discrepancies.
+                    INPUT:
+                        - review_text (str)
+                        - extracted_aspects (list): list of aspects extracted from review_text
+                        - actual_aspects (list): list of human annotated aspects from review_text
+                    OUTPUT:
+                        - revised_aspect_dict (dict): 
+                            - keys: extracted_aspects
+                            - values: reasons to add, remove, or retain certain aspect
+                        - feedback (str): Strategic hints. If an aspect is missing, point out the *specific phrase* in the text that was missed (e.g. "Review mentions 'expensive'") and suggest what category it belongs to, without explicitly stating "Add [Label]".
+                """
+        ```
+    </tool>
+    <tool>
+        ```python
+        def verify_extraction_coverage(review_text: str, extracted_aspects: list):
+            """
+            #### ADDED in the Co-Evolution Phase
+            COMPREHENSIVE VERIFIER: Performs a final safety check on the extraction.
+            
+            Checks for 3 specific failure modes identified by Tier 2 analysis:
+            1. RECALL: Missed 'ambience', 'atmosphere', or 'decor' cues.
+            2. RECALL: Missed 'price', 'value', or 'cost' cues.
+            3. PRECISION: False Positive 'service'. 
+               - FAIL if: "We were less than impressed", "Not coming back", "Terrible experience" (general dissatisfaction) is tagged as Service.
+               - PASS if: "The waiter was slow", "Staff was rude" (explicit service).
+            
+            INPUT: review_text, extracted_aspects
+            OUTPUT: 
+                - feedback (str): "PASS" or detailed instructions on what to Add/Remove.
+            """
+        ```
+    </tool>
+    <tool>
+        ```python
+            def parse_prev_results(previous_results:JSON): # -> (dict, list)
+                """
+                    Given previous_results in the JSON format, extract:
+                     - a dict of extraction process: keys are extracted aspects (under "result" then "aspect"), values are a tuple of "tool" used to extract and "explanation" for extraction of the respective aspect
+                     - final list of extracted aspects: under "extracted_aspects" of the "tool' "end_extraction"
+                    INPUT:
+                        - previous_results: JSON
+                    OUTPUT:
+                        - extraction_process (dict): a dict of extraction process: keys are extracted aspects (under "result" then "aspect"), values are a tuple of "tool" used to extract and "explanation" for extraction of the respective aspect
+                        - extracted_aspects (list): final list of extracted aspects: under "extracted_aspects" of the "tool' "end_extraction"
+                """
+        ```
+    </tool>
+
+</tools>
+
+<previous_results>
+    {PREVIOUS_RESULT}
+</previous_results>
+
+<actual_aspects>
+    {ACTUAL_ASPECTS}
+</actual_aspects>
+
+<review_text>
+    {REVIEW_TEXT}
+</review_text>
+
+<example_response>
+```python
+verify_extraction_coverage(review_text="The place was noisy but the staff was slow.", extracted_aspects=["food", "service"])
+# OUTPUT: "FAIL: Add 'ambience' (noisy). Check 'service' (slow is valid, PASS)."
+```
+```json
+{
+  "revised_aspect_dict": {
+    "ambience": "add",
+    "food": "retain"
+  },
+  "feedback": "Review mentions 'noisy' which falls under 'ambience'. Please add it."
+}
+```
+</example_response>
